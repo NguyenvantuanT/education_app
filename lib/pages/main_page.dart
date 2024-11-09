@@ -1,6 +1,6 @@
 import 'package:education_app/components/appBar/education_app_bar.dart';
 import 'package:education_app/models/user_model.dart';
-import 'package:education_app/pages/ClassWork/class_work_page.dart';
+import 'package:education_app/pages/learning/learning_page.dart';
 import 'package:education_app/pages/home/home_page.dart';
 import 'package:education_app/pages/stream/stream_page.dart';
 import 'package:education_app/pages/profile/profile_page.dart';
@@ -22,7 +22,7 @@ class _MainPageState extends State<MainPage> {
   List pages = [
     const HomePage(),
     const StreamPage(),
-    const ClassWorkPage(),
+    const LearningPage(),
   ];
 
   List<IconData> listIconData = [

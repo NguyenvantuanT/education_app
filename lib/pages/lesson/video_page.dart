@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:education_app/models/course_model.dart';
 import 'package:education_app/models/lesson.dart';
 import 'package:education_app/pages/lesson/widget/lesson_video_item.dart';
 import 'package:education_app/resources/app_color.dart';
@@ -10,48 +13,60 @@ class VideoPage extends StatefulWidget {
   const VideoPage(
     this.lesson, {
     super.key,
-    this.title,
-    this.lessons,
-    this.index = 0,
+    required this.courses,
   });
 
   final Lesson lesson;
-  final String? title;
-  final List<Lesson>? lessons;
-  final int index;
+  final CourseModel courses;
 
   @override
   State<VideoPage> createState() => _VideoPageState();
 }
 
 class _VideoPageState extends State<VideoPage> {
+  late YoutubePlayerController youtubePlayerController;
+  late List<Lesson> lessons;
+  late int selectIndex;
+  late Lesson lesson;
+
   static const tabNames = ['PlayList', 'Description'];
 
-  late YoutubePlayerController youtubePlayerController;
-  int selectedTabIndex = 0;
-  late int currentLessonIndex;
-  late Lesson currentLesson;
+  List<Lesson> getLessonsById(List<Lesson> lessons, List<String> listIdLesson) {
+    return lessons.where((lesson) => listIdLesson.contains(lesson.id)).toList();
+  }
+
+  void naviToLesson(Lesson newLesson) {
+    Timer(const Duration(milliseconds: 2000), (){
+
+    });
+    setState(() {
+      lesson = lessons.firstWhere((les) => les.id == newLesson.id);
+      youtubePlayerController
+          .load(YoutubePlayer.convertUrlToId(lesson.videoPath ?? '')!);
+    });
+  }
 
   @override
   void initState() {
     super.initState();
-    currentLessonIndex = widget.index;
-    currentLesson = widget.lesson;
+    selectIndex = 0;
+    lesson = widget.lesson;
+    lessons = getLessonsById(listLessons, widget.courses.lessons ?? []);
     _initYoutubePlayer();
   }
 
-  void _updateCurrentLesson(int index) {
-    setState(() {
-      currentLessonIndex = index;
-      currentLesson = widget.lessons![currentLessonIndex];
-      youtubePlayerController
-          .load(YoutubePlayer.convertUrlToId(currentLesson.videoPath ?? '')!);
-    });
-  }
+  // void _updateCurrentLesson(int index) {
+  //   setState(() {
+  //     currentLessonIndex = index;
+  //     lessons[index];
+  //     lessons[index].isComplete = true;
+
+  //   });
+  // }
 
   void _initYoutubePlayer() {
     youtubePlayerController = YoutubePlayerController(
-      initialVideoId: currentLesson.videoPath ?? '',
+      initialVideoId: lesson.videoPath ?? '',
       flags: const YoutubePlayerFlags(
         autoPlay: false,
       ),
@@ -76,10 +91,13 @@ class _VideoPageState extends State<VideoPage> {
           _buildLessonInfo(),
           const SizedBox(height: 20.0),
           _buildTabView(context),
-          if (selectedTabIndex == 0)
-            _buildLessonList()
-          else
-            _buildDescription(),
+          IndexedStack(
+            index: selectIndex,
+            children: [
+              _buildLessonList(),
+              _buildDescription(),
+            ],
+          )
         ],
       ),
     );
@@ -87,7 +105,7 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget _buildTitle() {
     return Text(
-      widget.title ?? " No title",
+      widget.courses.nameCouse ?? " No title",
       maxLines: 1,
       textAlign: TextAlign.center,
       style: AppTextStyle.h19Bold.copyWith(fontSize: 24.0),
@@ -102,7 +120,7 @@ class _VideoPageState extends State<VideoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              currentLesson.nameLesson ?? '',
+              lesson.nameLesson ?? '',
               style: AppTextStyle.h16Title,
             ),
             Row(
@@ -113,7 +131,7 @@ class _VideoPageState extends State<VideoPage> {
                   size: 20.0,
                 ),
                 Text(
-                  "${currentLesson.duration}",
+                  "${lesson.duration}",
                   style: AppTextStyle.h12SubTitle.copyWith(fontSize: 15),
                 ),
               ],
@@ -148,7 +166,7 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget _buildTabItem(int index, BuildContext context) {
     return GestureDetector(
-      onTap: () => setState(() => selectedTabIndex = index),
+      onTap: () => setState(() => selectIndex = index),
       child: Container(
         width: MediaQuery.of(context).size.width / 2 - 35,
         alignment: Alignment.center,
@@ -157,16 +175,14 @@ class _VideoPageState extends State<VideoPage> {
           vertical: 15,
         ),
         decoration: BoxDecoration(
-          color: selectedTabIndex == index ? AppColor.blue : null,
+          color: selectIndex == index ? AppColor.blue : null,
           borderRadius: BorderRadius.circular(10),
         ),
-        child: Expanded(
-          child: Text(
-            tabNames[index],
-            style: selectedTabIndex == index
-                ? AppTextStyle.h16Title.copyWith(color: AppColor.white)
-                : AppTextStyle.h16Title,
-          ),
+        child: Text(
+          tabNames[index],
+          style: selectIndex == index
+              ? AppTextStyle.h16Title.copyWith(color: AppColor.white)
+              : AppTextStyle.h16Title,
         ),
       ),
     );
@@ -174,26 +190,28 @@ class _VideoPageState extends State<VideoPage> {
 
   Widget _buildLessonList() {
     return ListView.separated(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: widget.lessons!.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 10.0),
-        itemBuilder: (context, index) {
-          final lesson = widget.lessons![index];
-          return LessonVideoItem(
-            lesson: lesson,
-            index: index,
-            currentLessonIndex: currentLessonIndex,
-            onTap: () => _updateCurrentLesson(index),
-          );
-        });
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: lessons.length,
+      separatorBuilder: (_, __) => const SizedBox(height: 10.0),
+      itemBuilder: (context, index) {
+        final lesson = lessons[index];
+        return LessonVideoItem(
+          lesson: lesson,
+          onTap: () {
+            lesson.isComplete = true;
+            naviToLesson(lesson);
+          },
+        );
+      },
+    );
   }
 
   Widget _buildDescription() {
     return Padding(
       padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
       child: ReadMoreText(
-        currentLesson.description ?? "",
+        lesson.description ?? "",
         trimLines: 4,
         trimMode: TrimMode.Line,
         trimCollapsedText: " Read more",

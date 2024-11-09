@@ -8,21 +8,17 @@ class LessonVideoItem extends StatelessWidget {
   const LessonVideoItem({
     super.key,
     required this.lesson,
-    required this.currentLessonIndex,
-    required this.index,
     this.onTap,
   });
   final Lesson lesson;
-  final int currentLessonIndex;
-  final int index;
   final Function()? onTap;
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration:const ShapeDecoration(
+      decoration: const ShapeDecoration(
         color: AppColor.white,
         shadows: AppBoxShadow.appShadow,
-        shape:  RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(10.0),
           ),
@@ -37,7 +33,11 @@ class LessonVideoItem extends StatelessWidget {
         ),
         subtitle: Row(
           children: [
-            const Icon(Icons.watch_later, size: 16.0, color: AppColor.blue,),
+            const Icon(
+              Icons.watch_later,
+              size: 16.0,
+              color: AppColor.blue,
+            ),
             const SizedBox(width: 5.0),
             Text(
               lesson.duration ?? "",
@@ -51,20 +51,18 @@ class LessonVideoItem extends StatelessWidget {
   }
 
   Widget _buildLessonItemLeading() {
-    return CircleAvatar(
-      backgroundColor: currentLessonIndex == index
-          ? AppColor.blue
-          : AppColor.blue.withOpacity(0.2),
+    return const CircleAvatar(
+      backgroundColor: AppColor.blue,
       child: Icon(
         Icons.play_arrow_outlined,
         size: 20,
-        color: currentLessonIndex == index ? AppColor.white : AppColor.blue,
+        color: AppColor.white,
       ),
     );
   }
 
   Widget _buildLessonItemTrailing() {
-    return currentLessonIndex == index
+    return lesson.isComplete ?? false
         ? const CircleAvatar(
             backgroundColor: AppColor.green,
             child: Icon(Icons.check),

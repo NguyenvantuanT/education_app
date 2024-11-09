@@ -1,13 +1,10 @@
 import 'package:education_app/components/app_box_shadow.dart';
-import 'package:education_app/components/button/app_elevated_button.dart';
-import 'package:education_app/models/course_model.dart';
 import 'package:education_app/models/user_model.dart';
-import 'package:education_app/pages/home/widgets/course_item.dart';
 import 'package:education_app/pages/profile/edit_profile_page.dart';
+import 'package:education_app/pages/profile/my_courses_page.dart';
 import 'package:education_app/resources/app_color.dart';
 import 'package:education_app/resources/app_text_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -17,144 +14,189 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  UserModel user = UserModel();
-  void _getProfile(BuildContext context) {
-    final fakeUser = {
-      'name': "Nguyen Van Tuan",
-      'specialized': "Flutter",
-      'avatar': "assets/images/default_avatar.jpg",
-      'email': 'user1@gmail.com',
-    };
-    user = UserModel.fromJson(fakeUser);
-    setState(() {});
-  }
+  late UserModel user;
+  List<String> nameCard = ['Edit Profile', 'Courses', 'Log Out'];
+  List<IconData> iconData = [
+    Icons.edit,
+    Icons.book,
+    Icons.exit_to_app,
+  ];
+
+  final fakeUser = {
+    'idUser': '123456T',
+    'name': "Nguyen Van Tuan",
+    'specialized': "Flutter",
+    'avatar': "assets/images/default_avatar.jpg",
+    'email': 'user1@gmail.com',
+  };
 
   @override
   void initState() {
     super.initState();
-    _getProfile(context);
+    user = UserModel.fromJson(fakeUser);
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Widget?> pages = [
+      EditProfilePage(user: user),
+      const MyCoursesPage(),
+      null
+    ];
+
     return Scaffold(
       backgroundColor: AppColor.bgColor,
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 22.0)
-            .copyWith(top: MediaQuery.of(context).padding.top + 10.0),
+      body: Column(
         children: [
-          Row(
-            children: [
-              _buildAvatar(),
-              const SizedBox(width: 20.0),
-              _buildInformation()
-            ],
+          SizedBox(
+            height: 280.0,
+            child: _buildInformationUser(),
           ),
-          AppElevatedButton.smail(
-            text: "Edit Profile",
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfilePage(user: user)));
-            },
-          ),
-          const SizedBox(height: 15.0),
-          _buildTitle("My courses"),
-          ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(
-              vertical: 10.0,
-            ).copyWith(bottom: 40.0),
-            itemCount: FakeCourse.courses.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 15.0),
-            itemBuilder: (context, index) {
-              final course = FakeCourse.courses[index];
-              return CourseItem(course);
-            },
-          ),
+          ...List.generate(nameCard.length, (idx) {
+            return _buildCard(
+              idx,
+              () => navigator(context, pages[idx]),
+            );
+          })
         ],
       ),
     );
   }
 
-  Widget _buildTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: AppTextStyle.h19Bold,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 40.0),
-            child: SvgPicture.asset(
-              "assets/svgs/icon2.svg",
-              width: 28.0,
-              height: 28.0,
-              fit: BoxFit.cover,
+  void navigator(BuildContext context, Widget? widget) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => widget ?? const SizedBox()));
+  }
+
+  Widget _buildCard(int idx, Function()? onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 12.0),
+        decoration: const BoxDecoration(
+          color: AppColor.white,
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          boxShadow: AppBoxShadow.appShadow,
+        ),
+        child: Row(
+          children: [
+            Icon(
+              iconData[idx],
+              color: AppColor.blue,
+              size: 25.0,
             ),
-          ),
-        ],
+            const SizedBox(width: 15.0),
+            Text(
+              nameCard[idx],
+              style: AppTextStyle.h16Title,
+            ),
+            const Spacer(),
+            const Icon(
+              Icons.navigate_next,
+              size: 32.0,
+              color: AppColor.grey,
+            )
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildInformation() {
-    return Expanded(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildInformationUser() {
+    final List<Map<String, String>> information = [
+      {'label': 'ID: ', 'value': user.idUser ?? "No ID"},
+      {'label': 'Mail: ', 'value': user.email ?? "No Email"},
+      {'label': 'Specialized: ', 'value': user.specialized ?? "No Specialized"},
+    ];
+
+    return Stack(
       children: [
-        Text(
-          user.name ?? "",
-          style: AppTextStyle.h19Bold,
-        ),
-        Row(
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 5.0),
-              child: Icon(
-                Icons.email,
-                color: AppColor.grey,
-                size: 15.0,
+        Positioned(
+            top: 0,
+            right: 0,
+            left: 0,
+            child: Container(
+              height: 200,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0)
+                  .copyWith(top: MediaQuery.of(context).padding.top + 10.0),
+              decoration: const BoxDecoration(
+                  color: AppColor.blue,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(20.0),
+                    bottomRight: Radius.circular(20.0),
+                  )),
+              child: Text(
+                "My Profile",
+                style: AppTextStyle.h16Title.copyWith(color: AppColor.white),
               ),
+            )),
+        Positioned(
+          top: 130.0,
+          left: 20.0,
+          right: 20.0,
+          child: Container(
+            padding: const EdgeInsets.all(15.0),
+            decoration: const BoxDecoration(
+                color: AppColor.white,
+                borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                boxShadow: AppBoxShadow.appShadow),
+            child: Row(
+              children: [
+                _buildAvatar(),
+                const SizedBox(width: 15.0),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        user.name ?? "No Value",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.h16Title
+                            .copyWith(color: AppColor.blue),
+                      ),
+                      const SizedBox(height: 4.0),
+                      ...information.map(
+                        (info) => _buildInforUser(
+                          info['label']!,
+                          info['value']!,
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
-            Text(
-              ": ${user.email}",
-              style: AppTextStyle.h17W500,
-            ),
-          ],
+          ),
         ),
-        Row(
-          children: [
-            Text(
-              user.specialized ?? "",
-              style: AppTextStyle.h17W500,
-            ),
-          ],
-        )
       ],
-    ));
+    );
+  }
+
+  Widget _buildInforUser(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2.0),
+      child: RichText(
+          text: TextSpan(
+              text: label,
+              style: AppTextStyle.h16Title
+                  .copyWith(color: AppColor.blue, fontSize: 14),
+              children: [
+            TextSpan(
+                text: value,
+                style: AppTextStyle.h16Title.copyWith(fontSize: 14.0))
+          ])),
+    );
   }
 
   Widget _buildAvatar() {
-    return Container(
-      height: 120.5,
-      width: 120.0,
-      margin: const EdgeInsets.only(bottom: 17.0, top: 5.0),
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-          color: AppColor.white,
-          borderRadius: BorderRadius.circular(12.0),
-          boxShadow: AppBoxShadow.appShadow),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10.0),
-        child: Image.asset(
-          user.avatar ?? "",
-          height: 100,
-          width: 100,
-          fit: BoxFit.cover,
-        ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10.0),
+      child: Image.asset(
+        user.avatar ?? "",
+        height: 100,
+        width: 100,
+        fit: BoxFit.cover,
       ),
     );
   }

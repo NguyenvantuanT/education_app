@@ -9,21 +9,25 @@ class CourseModel {
   UserModel? teacher;
   double? rating;
   List<String>? lessons;
+  int? progress;
 
-  CourseModel();
+  bool get isCompleted => (progress ?? 0) >= 100;
+
+  CourseModel() ;
+  
 
   factory CourseModel.fromJson(Map<String, dynamic> json) => CourseModel()
-  ..idCourse = json['idCourse'] as String?
-  ..nameCouse = json['nameCouse'] as String?
-  ..description = json['description'] as String?
-  ..image = json['image'] as String?
-  ..teacher = UserModel.fromJson(json['teacher'])
-  ..idCategory = json['idCategory'] as String?
-  ..rating = (json['rating'] as num?)?.toDouble()
-  ..lessons = json['lessons'] != null
-      ? List<String>.from(json['lessons'] as List)
-      : null;
-
+    ..idCourse = json['idCourse'] as String?
+    ..nameCouse = json['nameCouse'] as String?
+    ..description = json['description'] as String?
+    ..image = json['image'] as String?
+    ..teacher = UserModel.fromJson(json['teacher'])
+    ..idCategory = json['idCategory'] as String?
+    ..rating = (json['rating'] as num?)?.toDouble()
+    ..lessons = json['lessons'] != null
+        ? List<String>.from(json['lessons'] as List)
+        : null
+    ..progress = json['progress'] as int?;
 }
 
 class FakeCourse {
@@ -39,6 +43,7 @@ class FakeCourse {
 
   static const course1 = {
     'idCourse': 'course1',
+    'progress': 0,
     'nameCouse': 'Flutter Basic to Pro',
     'image': 'assets/images/flutter.jpg',
     'teacher': {
@@ -48,7 +53,7 @@ class FakeCourse {
     },
     'idCategory': "dev",
     'description':
-        'Khóa học flutter trình bày từ basic đến nâng cao , code trực tiếp không slider',
+        'Khóa học flutter trình bày từ basic đếnIt is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using Content here, content here, making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for lorem ipsum will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).',
     'rating': 5,
     'lessons': [
       'lesson1',
@@ -61,6 +66,7 @@ class FakeCourse {
 
   static const course2 = {
     'idCourse': 'course2',
+    'progress': 50,
     'nameCouse': 'NodeJS Normal to Pro',
     'image': 'assets/images/node.png',
     'teacher': {
@@ -82,6 +88,7 @@ class FakeCourse {
 
   static const course3 = {
     'idCourse': 'course3',
+    'progress': 100,
     'nameCouse': 'ReactJS Normal to Pro',
     'image': 'assets/images/react.jpg',
     'teacher': {
@@ -102,6 +109,7 @@ class FakeCourse {
 
   static const course4 = {
     'idCourse': 'course3',
+    'progress': 0,
     'nameCouse': 'ReactJS Normal to Pro',
     'image': 'assets/images/react.jpg',
     'teacher': {
@@ -121,6 +129,7 @@ class FakeCourse {
   };
   static const course5 = {
     'idCourse': 'course3',
+    'progress': 20,
     'nameCouse': 'ReactJS Normal to Pro',
     'image': 'assets/images/react.jpg',
     'teacher': {

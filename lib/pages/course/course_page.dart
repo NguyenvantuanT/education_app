@@ -1,5 +1,6 @@
 import 'package:education_app/models/course_model.dart';
 import 'package:education_app/models/lesson.dart';
+import 'package:education_app/pages/course/widgets/teacher_infor.dart';
 import 'package:education_app/pages/course/widgets/lesson_item.dart';
 import 'package:education_app/pages/lesson/video_page.dart';
 import 'package:education_app/resources/app_color.dart';
@@ -17,38 +18,19 @@ class CoursePage extends StatefulWidget {
 }
 
 class _CoursePageState extends State<CoursePage> {
+  late int selectIndex;
+  late List<Lesson> lessons;
+  List<String> nameTab = ['About', 'Lessons', 'Reviews'];
+
   List<Lesson> getLessonsById(List<Lesson> lessons, List<String> listIdLesson) {
     return lessons.where((lesson) => listIdLesson.contains(lesson.id)).toList();
   }
 
-  List<Widget> getLessonWidget(List<String> listIdLesson) {
-    final lessons = getLessonsById(listLessons, listIdLesson);
-    return List.generate(
-      lessons.length,
-      (index) {
-        final lesson = lessons[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 10.0),
-          child: LessonItem(
-            lesson,
-            index: index,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VideoPage(
-                    lesson,
-                    title: widget.course.nameCouse,
-                    index: index,
-                    lessons: lessons,
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    selectIndex = 0;
+    lessons = getLessonsById(listLessons, widget.course.lessons ?? []);
   }
 
   @override
@@ -65,55 +47,106 @@ class _CoursePageState extends State<CoursePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  _buildTeacherInfor(),
+                  const SizedBox(height: 10.0),
                   Text(widget.course.nameCouse ?? "",
                       style: AppTextStyle.h16Title.copyWith(fontSize: 22.0)),
                   const SizedBox(height: 10.0),
-                  Row(
-                    children: [
-                      Text(
-                        "Art Course",
-                        style: AppTextStyle.h15W300
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const Spacer(),
-                      const Icon(
-                        Icons.star,
-                        color: AppColor.orange,
-                        size: 20,
-                      ),
-                      Text(
-                        widget.course.rating.toString(),
-                        style: AppTextStyle.h16Title,
-                      ),
-                      const SizedBox(width: 5.0),
-                      Text(
-                        "(2k Reviews)",
-                        style: AppTextStyle.h15W300
-                            .copyWith(fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 20.0),
+                  _buildReview(),
+                  const SizedBox(height: 15.0),
+                  Text("About Course", style: AppTextStyle.h16Title),
+                  const SizedBox(height: 15.0),
                   ReadMoreText(
                     widget.course.description ?? "",
                     trimLines: 4,
+                    style: AppTextStyle.h17Medium.copyWith(fontSize: 15.0),
                     trimMode: TrimMode.Line,
                     trimCollapsedText: " Read more",
                     trimExpandedText: " End text",
                     lessStyle: AppTextStyle.h16Title,
                     moreStyle: AppTextStyle.h16Title,
                   ),
-                  const SizedBox(height: 20.0),
-                  Text("Course Contents", style: AppTextStyle.h16Title),
-                  Column(
-                    children: getLessonWidget(widget.course.lessons ?? []),
-                  ),
+                  const SizedBox(height: 15.0),
+                  Text("Lesson", style: AppTextStyle.h16Title),
+                  _buildLessons(),
+                  const SizedBox(height: 15.0),
                 ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildReview() {
+    return Row(
+      children: [
+        Text(
+          "Art Course",
+          style: AppTextStyle.h15W300.copyWith(fontWeight: FontWeight.bold),
+        ),
+        const Spacer(),
+        const Icon(
+          Icons.star,
+          color: AppColor.orange,
+          size: 20,
+        ),
+        Text(
+          widget.course.rating.toString(),
+          style: AppTextStyle.h16Title,
+        ),
+        const SizedBox(width: 5.0),
+        Text(
+          "(2k Reviews)",
+          style: AppTextStyle.h15W300.copyWith(fontWeight: FontWeight.bold),
+        )
+      ],
+    );
+  }
+
+  Widget _buildTeacherInfor() {
+    final teacher = widget.course.teacher;
+    return TeacherInfor(
+      teacher: teacher,
+      description: widget.course.description,
+    );
+  }
+
+  Widget _buildLessons() {
+    return ListView.separated(
+      itemCount: lessons.length,
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(vertical: 20.0),
+      physics: const NeverScrollableScrollPhysics(),
+      separatorBuilder: (_, __) => Container(
+        margin: const EdgeInsets.symmetric(vertical: 15.0),
+        height: 1.2,
+        color: AppColor.grey.withOpacity(0.3),
+      ),
+      itemBuilder: (context, index) {
+        final lesson = lessons[index];
+        return LessonItem(
+          lesson,
+          index: index,
+          onTap: () {
+            for (var lesson in lessons) {
+              lesson.isComplete = false;
+            }
+            lesson.isComplete = true;
+            setState(() {});
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VideoPage(
+                  lesson,
+                  courses: widget.course,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 

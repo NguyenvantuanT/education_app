@@ -5,15 +5,19 @@ class Lesson {
   String? description;
   String? imageLesson;
   String? duration;
+  bool? isComplete;
 
-  Lesson();
+  Lesson(){
+    isComplete = false;
+  }
 
   factory Lesson.fromJson(Map<String, dynamic> json) => Lesson()
     ..nameLesson = json["nameLesson"] as String?
     ..videoPath = json["videoPath"] as String?
     ..description = json["description"] as String?
     ..imageLesson = json["imageLesson"] as String?
-    ..duration = json['duration'] as String?;
+    ..duration = json['duration'] as String?
+    ..isComplete = json['isComplete'] as bool?;
 }
 
 List<Lesson> listLessons = [

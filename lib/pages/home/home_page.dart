@@ -19,6 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late int selectIndex;
+  
   List<CourseModel> fileByCategory(
       List<CourseModel> courses, String idCategory) {
     return courses
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: courseList.length,
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0,),
             separatorBuilder: (_, __) => const SizedBox(width: 20.0),
             itemBuilder: (context, index) {
               final course = courseList[index];
@@ -128,8 +129,9 @@ class _HomePageState extends State<HomePage> {
         return GestureDetector(
           onTap: () => setState(() => selectIndex = index),
           child: Container(
-            margin:
-                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+            margin: const EdgeInsets.symmetric(vertical: 15.0).copyWith(
+              left: 20.0,
+            ),
             padding: const EdgeInsets.all(10.0),
             decoration: BoxDecoration(
                 color: selectIndex == index ? AppColor.blue : AppColor.white,
