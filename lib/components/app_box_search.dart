@@ -8,11 +8,13 @@ class AppBoxSearch extends StatelessWidget {
     super.key,
     this.searchController,
     this.onChanged,
+    this.onTap,
     this.radius = 12.0,
   });
   final TextEditingController? searchController;
   final Function(String?)? onChanged;
   final double radius;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,7 @@ class AppBoxSearch extends StatelessWidget {
               cursorColor: AppColor.greyText,
               decoration: InputDecoration(
                 border: InputBorder.none,
-                hintText: "Search your teacher",
+                hintText: "Search your course",
                 hintStyle: GoogleFonts.lato(
                   textStyle: const TextStyle(
                     color: AppColor.grey,
@@ -44,18 +46,21 @@ class AppBoxSearch extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            height: 45.0,
-            width: 45.0,
-            decoration: BoxDecoration(
-              color: AppColor.blue,
-              border: Border.all(color: AppColor.transparent, width: 1.2),
-              borderRadius: BorderRadius.circular(radius - 5.0),
-            ),
-            child: const Icon(
-              Icons.search,
-              color: AppColor.white,
-              size: 23.97,
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              height: 45.0,
+              width: 45.0,
+              decoration: BoxDecoration(
+                color: AppColor.blue,
+                border: Border.all(color: AppColor.transparent, width: 1.2),
+                borderRadius: BorderRadius.circular(radius - 5.0),
+              ),
+              child: const Icon(
+                Icons.search,
+                color: AppColor.white,
+                size: 23.97,
+              ),
             ),
           )
         ],

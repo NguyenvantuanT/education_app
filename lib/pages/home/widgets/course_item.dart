@@ -6,19 +6,23 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CourseItem extends StatelessWidget {
-  const CourseItem(this.course, {super.key, this.onTap});
+  const CourseItem(this.course, {super.key, this.onTap, this.width, this.height});
   final CourseModel course;
   final Function()? onTap;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.all(10.0),
+        width: width,
+        height: height,
+        padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: AppColor.white,
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(16.0),
           boxShadow: AppBoxShadow.appShadow,
         ),
         child: Row(

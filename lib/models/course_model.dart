@@ -39,6 +39,7 @@ class FakeCourse {
     CourseModel.fromJson(course3),
     CourseModel.fromJson(course4),
     CourseModel.fromJson(course5),
+    CourseModel.fromJson(course6),
   ];
 
   static const course1 = {
@@ -108,7 +109,7 @@ class FakeCourse {
   };
 
   static const course4 = {
-    'idCourse': 'course3',
+    'idCourse': 'course4',
     'progress': 0,
     'nameCouse': 'ReactJS Normal to Pro',
     'image': 'assets/images/react.jpg',
@@ -128,7 +129,7 @@ class FakeCourse {
     ]
   };
   static const course5 = {
-    'idCourse': 'course3',
+    'idCourse': 'course5',
     'progress': 20,
     'nameCouse': 'ReactJS Normal to Pro',
     'image': 'assets/images/react.jpg',
@@ -138,6 +139,27 @@ class FakeCourse {
       'avatar': "assets/images/user_3.png",
     },
     'idCategory': "Data",
+    'description':
+        'The Macine learning basics program is designed to offer a soli foundation & work-ready skills for ML engineers. The Macine learning basics program is designed to offer a soli foundation & work-ready skills for ML engineers. Read More',
+    'rating': 4.5,
+    'lessons': [
+      'lesson1',
+      'lesson2',
+      'lesson3',
+    ]
+  };
+
+  static const course6 = {
+    'idCourse': 'course6',
+    'progress': 20,
+    'nameCouse': 'Game Basic to Pro',
+    'image': 'assets/images/react.jpg',
+    'teacher': {
+      'name': "Graham Osbor",
+      'specialized': "ReactJS",
+      'avatar': "assets/images/user_3.png",
+    },
+    'idCategory': "Game",
     'description':
         'The Macine learning basics program is designed to offer a soli foundation & work-ready skills for ML engineers. The Macine learning basics program is designed to offer a soli foundation & work-ready skills for ML engineers. Read More',
     'rating': 4.5,

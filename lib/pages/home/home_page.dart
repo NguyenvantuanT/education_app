@@ -1,14 +1,15 @@
-import 'package:education_app/components/app_box_search.dart';
 import 'package:education_app/components/app_box_shadow.dart';
 import 'package:education_app/models/category_model.dart';
 import 'package:education_app/models/course_model.dart';
 import 'package:education_app/pages/course/course_page.dart';
 import 'package:education_app/pages/home/widgets/category_item.dart';
 import 'package:education_app/pages/home/widgets/course_item.dart';
+import 'package:education_app/pages/search/search_page.dart';
 import 'package:education_app/resources/app_color.dart';
 import 'package:education_app/resources/app_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late int selectIndex;
-  
+
   List<CourseModel> fileByCategory(
       List<CourseModel> courses, String idCategory) {
     return courses
@@ -31,17 +32,23 @@ class _HomePageState extends State<HomePage> {
     return categorys.map((category) {
       final courseList = fileByCategory(courses, category.id ?? "");
       return SizedBox(
-        height: 230.0,
-        child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: courseList.length,
-            padding: const EdgeInsets.symmetric(horizontal: 20.0,),
-            separatorBuilder: (_, __) => const SizedBox(width: 20.0),
-            itemBuilder: (context, index) {
-              final course = courseList[index];
-              return CategoryItem(course);
-            }),
-      );
+      height: 485.0, 
+      child: GridView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 15.0),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2, 
+          crossAxisSpacing: 20.0,
+          mainAxisSpacing: 20.0,
+          childAspectRatio: 1.5, 
+        ),
+        itemCount: courseList.length,
+        itemBuilder: (context, index) {
+          final course = courseList[index];
+          return CategoryItem(course);
+        },
+      ),
+    );
     }).toList();
   }
 
@@ -54,7 +61,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController searchController = TextEditingController();
     return Scaffold(
       backgroundColor: AppColor.bgColor,
       body: SingleChildScrollView(
@@ -66,9 +72,7 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 children: [
                   Expanded(
-                    child: AppBoxSearch(
-                      searchController: searchController,
-                    ),
+                    child: _buildSearchBox(context),
                   ),
                   const SizedBox(width: 25.0),
                   GestureDetector(
@@ -84,6 +88,32 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             const SizedBox(height: 20.0),
+            _buildTitle("Propular Courses"),
+            SizedBox(
+              height: 200.0,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0)
+                    .copyWith(top: 26.0, bottom: 6.0),
+                itemCount: FakeCourse.courses.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(width: 20.0),
+                itemBuilder: (context, index) {
+                  final size = MediaQuery.of(context).size;
+                  final course = FakeCourse.courses[index];
+                  return CourseItem(
+                    course,
+                    width: size.width - 40.0,
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CoursePage(course)),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20.0),
             _buildTitle("All Courses"),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -94,28 +124,51 @@ class _HomePageState extends State<HomePage> {
               children: getCourses(FakeCourse.courses),
             ),
             const SizedBox(height: 10.0),
-            _buildTitle("Propular Courses"),
-            const SizedBox(height: 10.0),
-            ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20.0,
-                vertical: 10.0,
-              ).copyWith(bottom: 40.0),
-              itemCount: FakeCourse.courses.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 15.0),
-              itemBuilder: (context, index) {
-                final course = FakeCourse.courses[index];
-                return CourseItem(
-                  course,
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => CoursePage(course)),
-                  ),
-                );
-              },
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSearchBox(BuildContext context) {
+    double radius = 12.0;
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const SearchPage())),
+      child: Container(
+        height: 60.0,
+        padding: const EdgeInsets.only(
+            left: 20.0, top: 5.0, bottom: 5.0, right: 8.0),
+        decoration: BoxDecoration(
+            color: AppColor.white,
+            borderRadius: BorderRadius.circular(radius),
+            boxShadow: AppBoxShadow.appShadow),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Search your courses",
+              style: GoogleFonts.lato(
+                textStyle: const TextStyle(
+                  color: AppColor.grey,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
+            Container(
+              height: 45.0,
+              width: 45.0,
+              decoration: BoxDecoration(
+                color: AppColor.blue,
+                border: Border.all(color: AppColor.transparent, width: 1.2),
+                borderRadius: BorderRadius.circular(radius - 5.0),
+              ),
+              child: const Icon(
+                Icons.search,
+                color: AppColor.white,
+                size: 23.97,
+              ),
+            )
           ],
         ),
       ),

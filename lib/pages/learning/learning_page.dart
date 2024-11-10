@@ -14,12 +14,9 @@ class LearningPage extends StatefulWidget {
 }
 
 class _LearningPageState extends State<LearningPage> {
-  
   late int selectIndex;
   late UserModel userModel;
   late List<CourseModel> myCourses;
-  List<CourseModel> completedCourse = [];
-  List<CourseModel> onGoingCourse = [];
   List<String> tabName = ['All', 'Ongoing', 'Completed'];
 
   Map<String, dynamic> jsonData = {
@@ -29,7 +26,7 @@ class _LearningPageState extends State<LearningPage> {
     'avatar': 'avatar_url',
     'email': 'john.doe@example.com',
     'createCourses': ['course1', 'course2'],
-    'myCourses': ['course3', 'course4', 'course5', 'course1' , 'course2'],
+    'myCourses': ['course3', 'course4', 'course5', 'course1', 'course2'],
   };
 
   List<CourseModel> fileByIDCourse(
@@ -39,13 +36,12 @@ class _LearningPageState extends State<LearningPage> {
         .toList();
   }
 
-  void progress(List<CourseModel> courses) {
-    final completed = courses.where((c) => c.isCompleted).toList();
-    final onGoing =
-        courses.where((c) => (c.progress ?? 0) > 0 && !c.isCompleted).toList();
-    completedCourse = completed;
-    onGoingCourse = onGoing;
-    setState(() {});
+  List<List<CourseModel>> get progress {
+    final completed = myCourses.where((c) => c.isCompleted).toList();
+    final onGoing = myCourses
+        .where((c) => (c.progress ?? 0) > 0 && !c.isCompleted)
+        .toList();
+    return [myCourses, onGoing, completed];
   }
 
   @override
@@ -54,7 +50,7 @@ class _LearningPageState extends State<LearningPage> {
     selectIndex = 0;
     userModel = UserModel.fromJson(jsonData);
     myCourses = fileByIDCourse(userModel.myCourses ?? [], FakeCourse.courses);
-    progress(myCourses);
+    progress;
   }
 
   @override
@@ -72,11 +68,10 @@ class _LearningPageState extends State<LearningPage> {
           _buildTabView(),
           IndexedStack(
             index: selectIndex,
-            children: [
-              _buildBody(myCourses),
-              _buildBody(onGoingCourse),
-              _buildBody(completedCourse),
-            ],
+            children: List.generate(
+              progress.length,
+              (idx) => _buildBody(progress[idx]),
+            ),
           )
         ],
       ),
