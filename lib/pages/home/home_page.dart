@@ -1,9 +1,11 @@
 import 'package:education_app/components/app_box_shadow.dart';
 import 'package:education_app/models/category_model.dart';
 import 'package:education_app/models/course_model.dart';
+import 'package:education_app/models/todo_model.dart';
 import 'package:education_app/pages/course/course_page.dart';
 import 'package:education_app/pages/home/widgets/category_item.dart';
 import 'package:education_app/pages/home/widgets/course_item.dart';
+import 'package:education_app/pages/home/widgets/todo_challenger_item.dart';
 import 'package:education_app/pages/search/search_page.dart';
 import 'package:education_app/resources/app_color.dart';
 import 'package:education_app/resources/app_text_style.dart';
@@ -21,6 +23,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late int selectIndex;
 
+  List<CourseModel> courses = [];
+
   List<CourseModel> fileByCategory(
       List<CourseModel> courses, String idCategory) {
     return courses
@@ -32,23 +36,23 @@ class _HomePageState extends State<HomePage> {
     return categorys.map((category) {
       final courseList = fileByCategory(courses, category.id ?? "");
       return SizedBox(
-      height: 485.0, 
-      child: GridView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, 
-          crossAxisSpacing: 20.0,
-          mainAxisSpacing: 20.0,
-          childAspectRatio: 1.5, 
+        height: 485.0,
+        child: GridView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 20.0,
+            mainAxisSpacing: 20.0,
+            childAspectRatio: 1.5,
+          ),
+          itemCount: courseList.length,
+          itemBuilder: (context, index) {
+            final course = courseList[index];
+            return CategoryItem(course);
+          },
         ),
-        itemCount: courseList.length,
-        itemBuilder: (context, index) {
-          final course = courseList[index];
-          return CategoryItem(course);
-        },
-      ),
-    );
+      );
     }).toList();
   }
 
@@ -68,29 +72,30 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 20.0, right: 40.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: _buildSearchBox(context),
-                  ),
-                  const SizedBox(width: 25.0),
-                  GestureDetector(
-                    onTap: () {},
-                    child: SvgPicture.asset(
-                      "assets/svgs/icon1.svg",
-                      width: 28.0,
-                      height: 28.0,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ],
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: _buildSearchBox(context),
+            ),
+            const SizedBox(height: 20.0),
+            _buildTitle("Todo Challenger"),
+            SizedBox(
+              height: 160,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: todoListA.length,
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                separatorBuilder: (_, __) => const SizedBox(
+                  width: 15.0,
+                ),
+                itemBuilder: (context, index) {
+                  final todo = todoListA.reversed.toList()[index];
+                  return TodoChallengerItem(todo);
+                },
               ),
             ),
             const SizedBox(height: 20.0),
             _buildTitle("Propular Courses"),
             SizedBox(
-              height: 200.0,
+              height: 210.0,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 padding: const EdgeInsets.symmetric(horizontal: 20.0)
@@ -113,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 10.0),
             _buildTitle("All Courses"),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -211,7 +216,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Text(
             title,
-            style: AppTextStyle.h19Bold,
+            style: AppTextStyle.h16Title.copyWith(fontSize: 18),
           ),
           SvgPicture.asset(
             "assets/svgs/icon2.svg",

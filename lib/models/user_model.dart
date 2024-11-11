@@ -1,9 +1,11 @@
+
 class UserModel {
   String? idUser;
   String? name;
   String? specialized;
   String? avatar;
   String? email;
+  List<String>? todos;
   List<String>? createCourses;
   List<String>? myCourses;
 
@@ -15,6 +17,9 @@ class UserModel {
     ..specialized = json['specialized'] as String?
     ..avatar = json['avatar'] as String?
     ..email = json['email'] as String?
+    ..todos = (json['todos'] as List<dynamic>?)
+        ?.map((e) => e as String)
+        .toList()
     ..createCourses = (json['createCourses'] as List<dynamic>?)
         ?.map((e) => e as String)
         .toList()

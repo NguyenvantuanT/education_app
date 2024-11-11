@@ -62,7 +62,7 @@ class _LearningPageState extends State<LearningPage> {
         children: [
           Text(
             "My Courses",
-            style: AppTextStyle.h19Bold,
+            style: AppTextStyle.h16Title.copyWith(fontSize: 18),
           ),
           const SizedBox(height: 15.0),
           _buildTabView(),

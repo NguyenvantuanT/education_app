@@ -19,6 +19,7 @@ class CourseItem extends StatelessWidget {
       child: Container(
         width: width,
         height: height,
+        margin: const EdgeInsets.symmetric(vertical: 5.0),
         padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(
           color: AppColor.white,

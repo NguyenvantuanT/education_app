@@ -2,7 +2,7 @@ import 'package:education_app/components/appBar/education_app_bar.dart';
 import 'package:education_app/models/user_model.dart';
 import 'package:education_app/pages/learning/learning_page.dart';
 import 'package:education_app/pages/home/home_page.dart';
-import 'package:education_app/pages/stream/stream_page.dart';
+import 'package:education_app/pages/todo/todo_page.dart';
 import 'package:education_app/pages/profile/profile_page.dart';
 import 'package:education_app/resources/app_color.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
 
   List pages = [
     const HomePage(),
-    const StreamPage(),
+    const TodoPage(),
     const LearningPage(),
   ];
 
@@ -33,7 +33,7 @@ class _MainPageState extends State<MainPage> {
 
   List<String> listLabel = [
     'Home',
-    'Stream',
+    'Todo',
     'Learning',
   ];
 
