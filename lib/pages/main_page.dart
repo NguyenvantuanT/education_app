@@ -4,6 +4,7 @@ import 'package:education_app/pages/learning/learning_page.dart';
 import 'package:education_app/pages/home/home_page.dart';
 import 'package:education_app/pages/todo/todo_page.dart';
 import 'package:education_app/pages/profile/profile_page.dart';
+import 'package:education_app/pages/wishlist/wishlist_page.dart';
 import 'package:education_app/resources/app_color.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,18 +23,21 @@ class _MainPageState extends State<MainPage> {
   List pages = [
     const HomePage(),
     const TodoPage(),
+    const WishlistPage(),
     const LearningPage(),
   ];
 
   List<IconData> listIconData = [
     Icons.home,
-    Icons.slideshow,
+    Icons.edit,
+    Icons.favorite_border_outlined,
     Icons.class_,
   ];
 
   List<String> listLabel = [
     'Home',
     'Todo',
+    'Wishlist',
     'Learning',
   ];
 
@@ -41,10 +45,10 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     selectedIndex = 0;
-    _getProfile(context);
+    _getProfile();
   }
 
-  void _getProfile(BuildContext context) {
+  void _getProfile() {
     final fakeUser = {
       'name': "Nguyen Van Tuan",
       'specialized': "Flutter",
@@ -80,7 +84,7 @@ class _MainPageState extends State<MainPage> {
       ),
       child: Row(
         children: List.generate(
-          3,
+          4,
           (index) => Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,

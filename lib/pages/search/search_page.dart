@@ -66,25 +66,22 @@ class _SearchPageState extends State<SearchPage> {
   Widget _buildInformationUser() {
     return Stack(
       children: [
-        Positioned(
-            top: 0,
-            right: 0,
-            left: 0,
-            child: Container(
-              height: 180,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0)
-                  .copyWith(top: MediaQuery.of(context).padding.top + 10.0),
-              decoration: const BoxDecoration(
-                  color: AppColor.blue,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20.0),
-                    bottomRight: Radius.circular(20.0),
-                  )),
-              child: Text(
-                "Search Courses",
-                style: AppTextStyle.h16Title.copyWith(color: AppColor.white),
-              ),
-            )),
+        Container(
+          width: MediaQuery.of(context).size.width,
+          height: 180,
+          padding: const EdgeInsets.symmetric(horizontal: 20.0)
+              .copyWith(top: MediaQuery.of(context).padding.top + 10.0),
+          decoration: const BoxDecoration(
+              color: AppColor.blue,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20.0),
+                bottomRight: Radius.circular(20.0),
+              )),
+          child: Text(
+            "Search Courses",
+            style: AppTextStyle.h16Title.copyWith(color: AppColor.white),
+          ),
+        ),
         Positioned(
           top: 110.0,
           left: 20.0,

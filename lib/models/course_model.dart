@@ -28,6 +28,18 @@ class CourseModel {
         ? List<String>.from(json['lessons'] as List)
         : null
     ..progress = json['progress'] as int?;
+
+   Map<String, dynamic> toJson() => {
+        'idCourse': idCourse,
+        'nameCouse': nameCouse,
+        'description': description,
+        'image': image,
+        'idCategory': idCategory,
+        'teacher': teacher?.toJson(),
+        'rating': rating,
+        'lessons': lessons,
+        'progress': progress,
+      };
 }
 
 class FakeCourse {
