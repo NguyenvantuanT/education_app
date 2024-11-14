@@ -10,7 +10,7 @@ class CourseModel {
   double? rating;
   List<String>? lessons;
   int? progress;
-
+  bool isEditing = false;
   bool get isCompleted => (progress ?? 0) >= 100;
 
   CourseModel() ;

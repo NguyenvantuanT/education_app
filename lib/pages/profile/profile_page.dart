@@ -1,4 +1,5 @@
 import 'package:education_app/components/app_box_shadow.dart';
+import 'package:education_app/models/course_model.dart';
 import 'package:education_app/models/user_model.dart';
 import 'package:education_app/pages/profile/edit_profile_page.dart';
 import 'package:education_app/pages/profile/my_courses_page.dart';
@@ -15,6 +16,7 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   late UserModel user;
+  late List<CourseModel> createCourses;
   List<String> nameCard = ['Edit Profile', 'Courses', 'Log Out'];
   List<IconData> iconData = [
     Icons.edit,
@@ -22,25 +24,38 @@ class _ProfilePageState extends State<ProfilePage> {
     Icons.exit_to_app,
   ];
 
-  final fakeUser = {
-    'idUser': '123456T',
-    'name': "Nguyen Van Tuan",
-    'specialized': "Flutter",
-    'avatar': "assets/images/default_avatar.jpg",
-    'email': 'user1@gmail.com',
+  Map<String, dynamic> jsonData = {
+    'idUser': '12345',
+    'name': 'John Doe',
+    'specialized': 'Computer Science',
+    'avatar': 'assets/images/default_avatar.jpg',
+    'email': 'john.doe@example.com',
+    'createCourses': ['course1', 'course2', 'course4'],
+    'myCourses': ['course3', 'course4', 'course5', 'course1', 'course2'],
+    'wishLists': [
+      FakeCourse.course1,
+    ]
   };
+
+  List<CourseModel> fileByIDCourse(
+      List<String> idCourses, List<CourseModel> courses) {
+    return courses
+        .where((courses) => idCourses.contains(courses.idCourse ?? ""))
+        .toList();
+  }
 
   @override
   void initState() {
     super.initState();
-    user = UserModel.fromJson(fakeUser);
+    user = UserModel.fromJson(jsonData);
+    createCourses = fileByIDCourse(user.createCourses ?? [], FakeCourse.courses);
   }
 
   @override
   Widget build(BuildContext context) {
     List<Widget?> pages = [
       EditProfilePage(user: user),
-      const MyCoursesPage(),
+      MyCoursesPage(createCourses),
       null
     ];
 
@@ -64,7 +79,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void navigator(BuildContext context, Widget? widget) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => widget ?? const SizedBox()));
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => widget ?? const SizedBox()));
   }
 
   Widget _buildCard(int idx, Function()? onTap) {
@@ -175,18 +191,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildInforUser(String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2.0),
-      child: RichText(
-          text: TextSpan(
-              text: label,
-              style: AppTextStyle.h16Title
-                  .copyWith(color: AppColor.blue, fontSize: 14),
-              children: [
-            TextSpan(
-                text: value,
-                style: AppTextStyle.h16Title.copyWith(fontSize: 14.0))
-          ])),
-    );
+        padding: const EdgeInsets.symmetric(vertical: 2.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label,
+                style: AppTextStyle.h16Title
+                    .copyWith(color: AppColor.blue, fontSize: 14)),
+            Expanded(
+              child: Text(
+                value,
+                maxLines: 1,
+                style: AppTextStyle.h16Title.copyWith(fontSize: 14.0),
+              ),
+            )
+          ],
+        ));
   }
 
   Widget _buildAvatar() {

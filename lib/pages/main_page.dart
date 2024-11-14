@@ -1,4 +1,5 @@
 import 'package:education_app/components/appBar/education_app_bar.dart';
+import 'package:education_app/models/course_model.dart';
 import 'package:education_app/models/user_model.dart';
 import 'package:education_app/pages/learning/learning_page.dart';
 import 'package:education_app/pages/home/home_page.dart';
@@ -17,7 +18,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  UserModel user = UserModel();
+  late UserModel user ;
   late int selectedIndex;
 
   List pages = [
@@ -45,19 +46,22 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     selectedIndex = 0;
-    _getProfile();
+    user = UserModel.fromJson(jsonData);
   }
 
-  void _getProfile() {
-    final fakeUser = {
-      'name': "Nguyen Van Tuan",
-      'specialized': "Flutter",
-      'avatar': "assets/images/default_avatar.jpg",
-      'email': 'user1@gmail.com',
-    };
-    user = UserModel.fromJson(fakeUser);
-    setState(() {});
-  }
+
+  Map<String, dynamic> jsonData = {
+    'idUser': '12345',
+    'name': 'John Doe',
+    'specialized': 'Computer Science',
+    'avatar': 'assets/images/default_avatar.jpg',
+    'email': 'john.doe@example.com',
+    'createCourses': ['course1', 'course2'],
+    'myCourses': ['course3', 'course4', 'course5', 'course1', 'course2'],
+    'wishLists': [
+      FakeCourse.course1,
+    ]
+  };
 
   @override
   Widget build(BuildContext context) {

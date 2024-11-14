@@ -50,7 +50,6 @@ class _LearningPageState extends State<LearningPage> {
     selectIndex = 0;
     userModel = UserModel.fromJson(jsonData);
     myCourses = fileByIDCourse(userModel.myCourses ?? [], FakeCourse.courses);
-    progress;
   }
 
   @override

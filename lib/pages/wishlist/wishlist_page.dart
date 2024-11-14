@@ -1,6 +1,6 @@
 import 'package:education_app/models/course_model.dart';
 import 'package:education_app/models/user_model.dart';
-import 'package:education_app/pages/wishlist/widget.dart/wishlist_item.dart';
+import 'package:education_app/pages/wishlist/widget/wishlist_item.dart';
 import 'package:education_app/resources/app_color.dart';
 import 'package:education_app/resources/app_text_style.dart';
 import 'package:flutter/material.dart';

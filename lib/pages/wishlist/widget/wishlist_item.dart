@@ -6,10 +6,11 @@ import 'package:education_app/resources/app_text_style.dart';
 import 'package:flutter/material.dart';
 
 class WishlistItem extends StatelessWidget {
-  const WishlistItem(this.course ,{super.key,  this.onTap});
+  const WishlistItem(this.course, {super.key, this.onTap, this.onFavorite});
 
   final CourseModel course;
   final Function()? onTap;
+  final Function()? onFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -39,13 +40,28 @@ class WishlistItem extends StatelessWidget {
                 const SizedBox(height: 4.0),
                 Text('${course.teacher?.name} | ${course.idCategory}',
                     style: AppTextStyle.h12SubTitle.copyWith(fontSize: 14.0)),
-                const SizedBox(height: 10.0),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    AppRatingBar(onRatingUpdate: (_){}, rating: course.rating ?? 0.0),
-                   const Icon(Icons.favorite , color: AppColor.red, size: 25.0,),
+                    AppRatingBar(
+                        onRatingUpdate: (_) {}, rating: course.rating ?? 0.0),
+                    GestureDetector(
+                      onTap: onFavorite,
+                      behavior: HitTestBehavior.translucent,
+                      child: const Padding(
+                        padding: EdgeInsets.all(4.6),
+                        child: CircleAvatar(
+                          backgroundColor: AppColor.greyText,
+                          radius: 14.0,
+                          child: Icon(
+                            Icons.favorite,
+                            size: 20.0,
+                            color: AppColor.red,
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 )
               ],
