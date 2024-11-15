@@ -21,49 +21,53 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.bgColor,
-      body: ListView(
+      body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0).copyWith(
             top: MediaQuery.of(context).padding.top + 20.0, bottom: 20.0),
-        children: [
-          Row(
-            children: [
-              Text(
-                "All My Courses ",
-                style: AppTextStyle.h16Title.copyWith(fontSize: 22.0),
-              ),
-              const Spacer(),
-              AppIconButton(
-                icon: Icons.add,
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AddNewCoursePage()));
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  "All My Courses ",
+                  style: AppTextStyle.h16Title.copyWith(fontSize: 22.0),
+                ),
+                const Spacer(),
+                AppIconButton(
+                  icon: Icons.add,
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const AddNewCoursePage()));
+                  },
+                ),
+                const SizedBox(width: 20.0),
+              ],
+            ),
+            Expanded(
+              child: ListView.separated(
+                itemCount: widget.courses.length,
+                // shrinkWrap: true,
+                // physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(vertical: 25.0),
+                separatorBuilder: (_, __) => const SizedBox(height: 20.0),
+                itemBuilder: (context, index) {
+                  final course = widget.courses.reversed.toList()[index];
+                  return CreateCourseItem(
+                    course,
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditMyCoursePage(course)));
+                    },
+                  );
                 },
               ),
-              const SizedBox(width: 20.0),
-            ],
-          ),
-          ListView.separated(
-            itemCount: widget.courses.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(vertical: 25.0),
-            separatorBuilder: (_, __) => const SizedBox(height: 20.0),
-            itemBuilder: (context, index) {
-              final course = widget.courses.reversed.toList()[index];
-              return CreateCourseItem(
-                course,
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EditMyCoursePage(course)));
-                },
-              );
-            },
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

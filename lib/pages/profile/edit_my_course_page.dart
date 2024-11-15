@@ -3,7 +3,6 @@ import 'package:education_app/components/button/app_icon_button.dart';
 import 'package:education_app/models/category_model.dart';
 import 'package:education_app/models/course_model.dart';
 import 'package:education_app/models/lesson.dart';
-import 'package:education_app/pages/main_page.dart';
 import 'package:education_app/pages/profile/widget/app_text_infor_course.dart';
 import 'package:education_app/pages/profile/widget/dropdown_text_infor_course.dart';
 import 'package:education_app/pages/profile/widget/edit_lesson_item.dart';
@@ -66,9 +65,6 @@ class _EditMyCoursePageState extends State<EditMyCoursePage> {
             "Edit Course",
             style: AppTextStyle.h16Title.copyWith(fontSize: 22.0),
           ),
-          const Spacer(),
-          
-          const SizedBox(width: 20.0),
           const SizedBox(height: 20.0),
           AppTextInforCourse(
             controller: nameCourseController,
@@ -117,8 +113,8 @@ class _EditMyCoursePageState extends State<EditMyCoursePage> {
     );
   }
 
-  Future<void> buildBottomSheet(BuildContext context) async {
-    return showModalBottomSheet<bool>(
+  void buildBottomSheet(BuildContext context) {
+    showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.white,
@@ -129,59 +125,41 @@ class _EditMyCoursePageState extends State<EditMyCoursePage> {
           ),
         ),
         builder: (context) {
-          return StatefulBuilder(builder: (context, setStatus) {
-            return FractionallySizedBox(
-              heightFactor: 0.76,
-              child: Column(
-                children: [
-                  const SizedBox(height: 30.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Text("All Lesson", style: AppTextStyle.h16Title),
-                      AppIconButton(
-                        onTap: () => Navigator.of(context).pop(true),
-                        icon: Icons.add,
-                      )
-                    ],
+          return FractionallySizedBox(
+            heightFactor: 0.76,
+            child: Column(
+              children: [
+                const SizedBox(height: 30.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text("All Lesson", style: AppTextStyle.h16Title),
+                    AppIconButton(
+                      onTap: () {},
+                      icon: Icons.add,
+                    )
+                  ],
+                ),
+                const SizedBox(height: 30.0),
+                Expanded(
+                  child: ListView.separated(
+                    separatorBuilder: ((_, __) => const SizedBox(height: 15.0)),
+                    padding: const EdgeInsets.only(
+                        left: 20.0, top: 2.0, right: 20.0, bottom: 4.0),
+                    itemCount: lessons.length,
+                    itemBuilder: ((context, index) {
+                      final lesson = lessons[index];
+                      return EditLessonItem(
+                        lesson,
+                        onEdit: () {},
+                        onDelete: () {},
+                      );
+                    }),
                   ),
-                  const SizedBox(height: 30.0),
-                  Expanded(
-                    child: ListView.separated(
-                      separatorBuilder: ((_, __) =>
-                          const SizedBox(height: 15.0)),
-                      padding: const EdgeInsets.only(
-                          left: 20.0, top: 2.0, right: 6.0, bottom: 4.0),
-                      itemCount: lessons.length,
-                      itemBuilder: ((context, index) {
-                        final lesson = lessons[index];
-                        return EditLessonItem(
-                          lesson,
-                          onEdit: () {
-                            Navigator.of(context).pop(false);
-                          },
-                          onDelete: () {
-                            Navigator.of(context).pop(false);
-                          },
-                        );
-                      }),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          });
-        }).then(
-      (value) {
-        if (value == true) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const MainPage(),
+                ),
+              ],
             ),
           );
-        }
-      },
-    );
+        });
   }
 }

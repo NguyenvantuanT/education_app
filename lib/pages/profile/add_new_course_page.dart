@@ -4,7 +4,7 @@ import 'package:education_app/components/button/app_elevated_button.dart';
 import 'package:education_app/components/button/app_icon_button.dart';
 import 'package:education_app/models/category_model.dart';
 import 'package:education_app/models/lesson.dart';
-import 'package:education_app/pages/main_page.dart';
+import 'package:education_app/pages/profile/add_new_lesson_page.dart';
 import 'package:education_app/pages/profile/widget/app_text_infor_course.dart';
 import 'package:education_app/pages/profile/widget/dropdown_text_infor_course.dart';
 import 'package:education_app/pages/profile/widget/edit_lesson_item.dart';
@@ -26,6 +26,7 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
   final idCategoryController = TextEditingController();
   String value = "Null";
   List<Lesson> lessons = [];
+  bool isLoad = false;
 
   List<String> getCategory() {
     return categorys.map((e) => e.name ?? "").toList();
@@ -42,6 +43,7 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
   @override
   void initState() {
     super.initState();
+    isLoad = lessons.isEmpty;
   }
 
   @override
@@ -78,8 +80,8 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
           ),
           const SizedBox(height: 10.0),
           GestureDetector(
-            onTap: () async {
-              await buildBottomSheet(context);
+            onTap: ()  {
+               buildBottomSheet(context);
             },
             child: DropdownTextInforCourse(
               title: "All Lessons",
@@ -130,7 +132,7 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MainPage(),
+                            builder: (context) => const AddNewLessonPage(),
                           ),
                         ),
                         icon: Icons.add,
@@ -139,8 +141,13 @@ class _AddNewCoursePageState extends State<AddNewCoursePage> {
                   ),
                   const SizedBox(height: 30.0),
                   Expanded(
-                    child: lessons.isEmpty
-                        ?  Center(child: Text("No value", style: AppTextStyle.h17Medium,),)
+                    child: isLoad
+                        ? Center(
+                            child: Text(
+                              "No value",
+                              style: AppTextStyle.h17Medium,
+                            ),
+                          )
                         : ListView.separated(
                             separatorBuilder: ((_, __) =>
                                 const SizedBox(height: 15.0)),
