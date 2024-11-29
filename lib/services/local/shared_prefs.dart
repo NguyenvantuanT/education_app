@@ -1,16 +1,27 @@
+import 'dart:convert';
+
+import 'package:education_app/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefs {
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
-  final String keyAvatar = 'Avatar';
-  
-  Future<String?> getAvatar() async {
-    SharedPreferences prefs = await _prefs;
-    return prefs.getString(keyAvatar);
+  static late SharedPreferences _prefs;
+  static const String keyUser = 'user';
+
+  static Future<void> initialise() async {
+    _prefs = await SharedPreferences.getInstance();
   }
 
-  Future<void> saveAvatar(String avatarPath) async {
-    SharedPreferences prefs = await _prefs;
-    prefs.setString(keyAvatar, avatarPath);
+  static UserModel? get user {
+    String? data =  _prefs.getString(keyUser);
+    if(data == null) return null;
+    return UserModel.fromJson(jsonDecode(data));
+  }
+
+  static set user(UserModel? user) {
+    _prefs.setString(keyUser, jsonEncode(user?.toJson()));
+  }
+
+  static remote() {
+    _prefs.remove(keyUser);
   }
 }

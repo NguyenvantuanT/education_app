@@ -1,10 +1,15 @@
 import 'package:education_app/pages/auth/login_page.dart';
 import 'package:education_app/resources/app_color.dart';
 import 'package:education_app/resources/app_text_style.dart';
+import 'package:education_app/services/local/shared_prefs.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
@@ -15,6 +20,8 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  await SharedPrefs.initialise();
 
   runApp(const MyApp());
 }

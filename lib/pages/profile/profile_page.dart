@@ -65,7 +65,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     List<Widget?> pages = [
       EditProfilePage(user: user),
-      ChangePasswordPage(email: user.email ?? ""),
+      const ChangePasswordPage(),
       MyCoursesPage(createCourses),
       null
     ];
